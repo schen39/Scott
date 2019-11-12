@@ -1,0 +1,109 @@
+#!/bin/sh
+
+shutdown()
+{
+if [ "$1" == "-t" ]; then
+for i in `seq -w $2 -1 0`
+do
+
+D=`expr $i / 60 / 60 / 24`
+H=`expr $i / 60 / 60 % 60 % 24`
+M=`expr $i / 60 % 60`
+S=`expr $i % 60`
+if [ "$D" = "0" ] && [ "$H" = "0" ] && [ "$M" = "0" ]
+then
+res=`expr $i % 2`
+if [ "$res" = "0" ]
+then
+echo -en "\e[0;0m 系统将于\e[31m$D天$H时$M分$S秒\e[0m后关闭\r"
+else
+echo -en "\e[0;0m 系统将于\e[32m$D天$H时$M分$S秒\e[0m后关闭\r" 
+fi
+else
+echo -en "\e[0;0m 系统将于\e[32m$D天$H时$M分$S秒\e[0m后关闭\r"
+fi
+
+sleep 1;
+done
+echo  -e "\n\e[0;31m系统已关闭\e[0m"
+else
+echo  -e "\e[0;31m系统已关闭\e[0m"
+fi
+}
+
+Restart()
+{
+if [ "$1" == "-t" ]; then
+for i in `seq -w $2 -1 0`
+do
+
+D=`expr $i / 60 / 60 / 24`
+H=`expr $i / 60 / 60 % 60 % 24`
+M=`expr $i / 60 % 60`
+S=`expr $i % 60`
+if [ "$D" = "0" ] && [ "$H" = "0" ] && [ "$M" = "0" ]
+then
+res=`expr $i % 2`
+if [ "$res" = "0" ]
+then
+echo -en "\e[0;0m 系统将于\e[31m$D天$H时$M分$S秒\e[0m后重启\r"
+else
+echo -en "\e[0;0m 系统将于\e[32m$D天$H时$M分$S秒\e[0m后重启\r"
+fi
+else
+echo -en "\e[0;0m 系统将于\e[32m$D天$H时$M分$S秒\e[0m后重启\r"
+fi
+
+sleep 1;
+done
+echo  -e "\n\e[0;31m系统正在重启...\e[0m"
+else
+echo  -e "\e[0;31m系统正在重启...\e[0m"
+fi
+}
+
+if [ "$1" == "-s" ]; then
+if [ "$2" == "-t" ]; then
+if [ "$3" -gt 0 ] 2>/dev/null ;then
+if [ ! -n $para1 ]; then
+run=1
+else
+	shutdown $2 $3
+fi
+else
+run=1
+fi
+else
+	shutdown $2
+fi
+if [ "$run" == "" ]; then
+  /sbin/poweroff
+else
+echo  -e "\e[0;31m请输入正确时间\e[0m"
+fi
+else
+if [ "$1" == "-r" ]; then
+if [ "$2" == "-t" ]; then
+if [ "$3" -gt 0 ] 2>/dev/null ;then
+if [ ! -n $para1 ]; then
+run=1
+else
+	Restart $2 $3
+fi
+else
+run=1
+fi
+else
+	Restart $2
+fi
+if [ "$run" == "" ]; then
+  /sbin/reboot
+else
+echo  -e "\e[0;31m请输入正确时间\e[0m"
+fi
+else
+echo  "-s 关机"
+echo  "-r 重启"
+echo  "-t 设定时间 单位：秒"
+fi
+fi
