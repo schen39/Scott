@@ -49,8 +49,9 @@
                 local eth_info = luci.sys.exec("ethinfo")
 
 		local rv = {
+                        cpuinfo    = cpu_info,
+			ethinfo    = eth_info,
 			uptime     = sysinfo.uptime or 0,
-                        ethinfo    = eth_info,
 			localtime  = os.date("%Y年%m月%d日") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X"),
 			loadavg    = sysinfo.load or { 0, 0, 0 },
 			memory     = meminfo,
@@ -635,7 +636,7 @@
 			<% end %>
 
 			var e;
-
+               
                         if (e = document.getElementById('ethinfo'))			{
 				var ports = eval('(' + info.ethinfo + ')');
 				var tmp = "";
@@ -799,9 +800,9 @@
 <% end %>
 
 <fieldset class="cbi-section">
-	<legend><%:ETH INFO%></legend>
+	<legend><%:Interfaces%></legend>
 
-	<table width="100%" cellspacing="10" id="ethinfo">
+        <table width="100%" cellspacing="10" id="ethinfo">
 	</table>
 </fieldset>
 
